@@ -1,3 +1,6 @@
+require_relative 'messages'
+require_relative 'handlers'
+
 module Bot
   class Handler
     SEARCH_STATUSES = {
@@ -17,7 +20,9 @@ module Bot
       when Telegram::Bot::Types::Message        
         case message.text
         when '/start'
-          Answers::Hello.send(id, user)
+          # Answers::Hello.send(id, user)
+          handler = Bot::Handlers::Greeting.new(id, user)
+          handler.perform
         when '/search'
           unless searching?(id)
             @current_searches[id] = SEARCH_STATUSES['0']
