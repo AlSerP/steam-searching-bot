@@ -11,10 +11,9 @@ token = File.read('config/token')
 $bot = nil
 
 Telegram::Bot::Client.run(token, logger: Logger.new($stderr)) do |bot|
-  handler = Bot::Handler.new
   $bot = bot
 
   $bot.listen do |message|
-    handler.perform message
+    Bot::Handler.perform message
   end
 end
