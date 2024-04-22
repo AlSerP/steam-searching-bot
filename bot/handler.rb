@@ -11,6 +11,8 @@ module Bot
           Bot::Handlers::Greeting.new(id, user).perform
         when '/search'
           Bot::Handlers::Search.new(id, user).perform
+        when '/favorites'
+          Bot::Handlers::Favorites.new(id, user).perform
         else
           if Bot::Handlers::Search.searching?(id)
             Bot::Handlers::Search.new(id, user).perform(message: message.text)

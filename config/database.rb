@@ -23,6 +23,7 @@ class Database
         create_table :favorites do |table|
             table.column :item_hash, :string
             table.column :chat_id, :string
+            table.column :price, :string
         end
       end
     end

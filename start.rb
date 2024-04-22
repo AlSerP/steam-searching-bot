@@ -2,6 +2,7 @@
 require 'steam-api'
 require 'rubygems'
 require 'telegram/bot'
+require 'date'
 
 # Configure
 require_relative 'config/database'

@@ -112,7 +112,11 @@ module Bot
         
         return false unless favorite.nil?
 
-        favorite = Favorite.create(item_hash: search_result_hash, chat_id: @chat_id)  
+        request = SteamAPI::ItemPrice::Request.new(search_result_hash)
+        response = request.send
+
+        favorite = Favorite.create(item_hash: search_result_hash, chat_id: @chat_id, price: response.median_price)  
+
         true
       end
 
