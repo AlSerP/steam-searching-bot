@@ -17,8 +17,27 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (7.1.3.2)
+      activesupport (= 7.1.3.2)
+    activerecord (7.1.3.2)
+      activemodel (= 7.1.3.2)
+      activesupport (= 7.1.3.2)
+      timeout (>= 0.4.0)
+    activesupport (7.1.3.2)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      mutex_m
+      tzinfo (~> 2.0)
+    base64 (0.2.0)
     bigdecimal (3.1.7)
     concurrent-ruby (1.2.3)
+    connection_pool (2.4.1)
+    drb (2.2.1)
     dry-core (1.0.1)
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
@@ -45,10 +64,18 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.1.0)
       net-http
+    i18n (1.14.4)
+      concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    minitest (5.22.3)
     multipart-post (2.4.0)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
+    sqlite3 (1.7.3-x86_64-linux)
+    timeout (0.4.1)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     uri (0.13.0)
     zeitwerk (2.6.13)
 
@@ -57,9 +84,11 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activerecord (~> 7.1)
   faraday-multipart (~> 1.0)
+  sqlite3 (~> 1.4)
   steam-api!
   telegram-bot-ruby (>= 1.0)!
 
 BUNDLED WITH
-   2.5.6
+   2.4.10

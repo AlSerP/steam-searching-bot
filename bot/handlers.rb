@@ -1,9 +1,6 @@
-require_relative "user_search"
-
-require_relative "handlers/base"
-require_relative "handlers/greeting"
-require_relative "handlers/search"
-require_relative "handlers/unknown"
+# Load all Bot::Handlers::
+require_relative 'handlers/base'
+Dir[File.join(__dir__, 'handlers/', '*.rb')].each { |file| require_relative file }
 
 module Bot
   module Handlers

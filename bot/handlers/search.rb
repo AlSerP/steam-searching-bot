@@ -35,7 +35,7 @@ module Bot
         @user_search = Bot::UserSearch.new(@chat_id)
         @@current_searches[@chat_id] = @user_search
         
-        $bot.logger.debug(
+        $bot.logger.info(
           "User uid=\"#{ @chat_id }\" start searching. "\
           "Searchers count=\"#{ @@current_searches.size }\""
         )
@@ -48,14 +48,14 @@ module Bot
         response_s = request_s.send
 
         if response_s.empty?
-          $bot.logger.debug("User uid=\"#{ @chat_id }\" query=\"#{ query }\". No result")
+          $bot.logger.info("User uid=\"#{ @chat_id }\" query=\"#{ query }\". No result")
           finish_search!
           notice_no_result
 
           return nil
         end
 
-        $bot.logger.debug(
+        $bot.logger.info(
           "User uid=\"#{ @chat_id }\" query=\"#{ query }\". "\
           "Find #{ response_s.search_result_hash }"
         )
@@ -68,22 +68,36 @@ module Bot
           "price=\"#{ response_p.median_price }\""
         )
 
-        @user_search.add_results([response_s.search_result_hash])
+        @user_search.add_results([response_s])
         @user_search.next_step!
 
-        ask_confirm_favorite response_s.search_result, response_p.median_price
+        ask_confirm_favorite search_result, response_p.median_price
       end
 
       def handle_answer(answer)
-        finish_search!
         unless confirmed?(answer)
+          finish_search!
           notice_favorite_canceled
           
+          $bot.logger.info(
+            "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" cancel favoring"
+          )
+
           return false
         end
 
-        add_to_favorite
-        notice_favorite_confirmed(@user_search.results.last)
+        if add_to_favorite
+          finish_search!
+          notice_favorite_confirmed(search_result)
+          $bot.logger.info(
+            "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" start favoring"
+          )
+        else
+          notice_already_favorite(search_result)
+          $bot.logger.info(
+            "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" already favoring"
+          )
+        end
 
         true
       end
@@ -94,7 +108,12 @@ module Bot
       end
 
       def add_to_favorite
-        return
+        favorite = Favorite.where(item_hash: search_result_hash, chat_id: @chat_id).to_a[0]
+        
+        return false unless favorite.nil?
+
+        favorite = Favorite.create(item_hash: search_result_hash, chat_id: @chat_id)  
+        true
       end
 
       def ask_query
@@ -118,11 +137,23 @@ module Bot
       end
 
       def notice_favorite_canceled
-        Bot::Message::FavoriteCanceled.send(chat_id: @chat_id)
+        Bot::Messages::FavoriteCanceled.send(chat_id: @chat_id)
+      end
+
+      def notice_already_favorite(item)
+        Bot::Messages::AlreadyFavorite.send(chat_id: @chat_id, item: item)
       end
 
       def confirmed?(answer)
         CONFIRMATION.include?(answer.downcase)
+      end
+
+      def search_result
+        @user_search.results.last.search_result
+      end
+
+      def search_result_hash
+        @user_search.results.last.search_result_hash
       end
     end
   end

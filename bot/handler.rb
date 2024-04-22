@@ -1,8 +1,5 @@
-require_relative 'messages'
-require_relative 'handlers'
-
 module Bot
-  class Handler
+  class MainHandler
     def self.perform(message)
       id = message.chat.id
       user = message.from.first_name
