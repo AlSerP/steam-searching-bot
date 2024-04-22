@@ -21,5 +21,5 @@ end
 require_relative 'bot/models'
 require_relative 'bot/messages'
 require_relative 'bot/handlers'
-require_relative 'bot/handler'
+require_relative 'bot/main_handler'
 require_relative 'bot/bot'

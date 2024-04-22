@@ -2,15 +2,18 @@ module Bot
   class UserSearch
     SEARCH_STATUSES = [
       :entering_query,
+      :choosing_quality,
       :searching,
       :confirmation,
       :finished
     ].freeze
 
     attr_reader :status, :results
+    attr_accessor :query
 
     def initialize(id)
       @status = :entering_query
+      @query = nil
       @id = id
       @results = []
     end
@@ -29,6 +32,10 @@ module Bot
 
     def entering_query?
       @status == :entering_query
+    end
+
+    def choosing_quality?
+      @status == :choosing_quality
     end
 
     def confirming?

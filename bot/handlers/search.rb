@@ -2,6 +2,14 @@ module Bot
   module Handlers
     class Search < Bot::Handlers::Base
       CONFIRMATION = ['да', 'д', 'yes', 'y']
+      QUALITIES = {
+        'bs' => '(Закаленное в боях)',
+        'ww' => '(Поношенное)',
+        'ft' => '(После полевых испытаний)',
+        'mw' => '(Немного поношенное)',
+        'fn' => '(Прямо с завода)',
+        'no' => '',
+      }
       @@current_searches = {}
 
       def initialize(chat_id, username)
@@ -15,10 +23,17 @@ module Bot
         if @user_search.nil?
           start_search
         elsif @user_search.entering_query?
-          query = args[:message]
-          handle_query(query)
+          @user_search.query = args[:message]
+          @user_search.next_step!
+          ask_quality(@user_search.query)
+        elsif @user_search.choosing_quality?
+          quality = args[:callback]
+          $bot.logger.info "Callback with #{quality}"
+          @user_search.query = [@user_search.query, QUALITIES[quality]].join(' ') 
+          handle_query(@user_search.query)
         elsif @user_search.confirming?
-          answer = args[:message]
+          # answer = args[:message]
+          answer = args[:callback]
           handle_answer(answer)
         end
       end
@@ -115,9 +130,18 @@ module Bot
         request = SteamAPI::ItemPrice::Request.new(search_result_hash)
         response = request.send
 
-        favorite = Favorite.create(item_hash: search_result_hash, chat_id: @chat_id, price: response.median_price)  
+        favorite = Favorite.create(
+          item_hash: search_result_hash,
+          chat_id: @chat_id,
+          price: response.median_price,
+          original_price: response.median_price
+        )
 
         true
+      end
+
+      def ask_quality(query)
+        Bot::Messages::AskQuality.send(chat_id: @chat_id, query: query)
       end
 
       def ask_query

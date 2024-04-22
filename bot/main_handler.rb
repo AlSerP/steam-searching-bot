@@ -1,11 +1,17 @@
 module Bot
   class MainHandler
     def self.perform(message)
-      id = message.chat.id
       user = message.from.first_name
 
       case message
-      when Telegram::Bot::Types::Message        
+      when Telegram::Bot::Types::CallbackQuery
+        id = message.from.id
+        data = message.data
+
+        Bot::Handlers::Search.new(id, user).perform(callback: data)
+      when Telegram::Bot::Types::Message
+        id = message.chat.id
+        
         case message.text
         when '/start'
           Bot::Handlers::Greeting.new(id, user).perform

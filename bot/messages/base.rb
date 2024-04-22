@@ -4,8 +4,12 @@ module Bot
       class << self
         def text(args); end
 
-        def send(chat_id:, **text_args)
-          $bot.api.send_message(chat_id: chat_id, text: text(text_args))
+        def markup(args)
+          nil
+        end
+
+        def send(chat_id:, **kwargs)
+          $bot.api.send_message(chat_id: chat_id, text: text(kwargs), reply_markup: markup(kwargs))
         end
       end
     end

@@ -19,9 +19,9 @@ module Bot
           elsif diff.zero?
             "Нет изменений"
           elsif diff.positive?
-            "+#{diff}"
+            "+#{diff.round(2)}"
           elsif diff.negative?
-            "-#{diff}"
+            "-#{diff.abs.round(2)}"
           else
             "Нет данных"
           end

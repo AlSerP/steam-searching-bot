@@ -24,6 +24,7 @@ class Database
             table.column :item_hash, :string
             table.column :chat_id, :string
             table.column :price, :string
+            table.column :original_price, :string
         end
       end
     end
