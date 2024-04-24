@@ -7,6 +7,7 @@ module Bot
       when Telegram::Bot::Types::CallbackQuery
         id = message.from.id
         data = message.data
+        $bot.logger.debug "Got callback from uid=\"#{id}\""
 
         Bot::Handlers::Search.new(id, user).perform(callback: data)
       when Telegram::Bot::Types::Message
@@ -21,6 +22,7 @@ module Bot
           Bot::Handlers::Favorites.new(id, user).perform
         else
           if Bot::Handlers::Search.searching?(id)
+            $bot.logger.debug "User uid=\"#{id}\" continues search"
             Bot::Handlers::Search.new(id, user).perform(message: message.text)
           else
             Bot::Handlers::Unknown.new(id, user).perform

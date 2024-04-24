@@ -20,21 +20,10 @@ module Bot
       end
 
       def perform(**args)
-        if @user_search.nil?
-          start_search
-        elsif @user_search.entering_query?
-          @user_search.query = args[:message]
-          @user_search.next_step!
-          ask_quality(@user_search.query)
-        elsif @user_search.choosing_quality?
-          quality = args[:callback]
-          $bot.logger.info "Callback with #{quality}"
-          @user_search.query = [@user_search.query, QUALITIES[quality]].join(' ') 
-          handle_query(@user_search.query)
-        elsif @user_search.confirming?
-          # answer = args[:message]
-          answer = args[:callback]
-          handle_answer(answer)
+        if args.include? :callback
+          perform_callback(args)
+        else
+          perform_message(args)
         end
       end
 
@@ -43,6 +32,35 @@ module Bot
       end
 
       private
+
+      def perform_callback(args)
+        return notice_unknown if @user_search.nil?
+
+        if @user_search.choosing_quality?
+          quality = args[:callback]
+          $bot.logger.info "Callback with #{quality}"
+
+          @user_search.query = [@user_search.query, QUALITIES[quality]].join(' ') 
+          handle_query(@user_search.query)
+        elsif @user_search.confirming?
+          answer = args[:callback]
+          handle_answer(answer)
+        else
+          notice_unknown
+        end
+      end
+
+      def perform_message(args)
+        if @user_search.nil?
+          start_search
+        elsif @user_search.entering_query?
+          @user_search.query = args[:message]
+          @user_search.next_step!
+          ask_quality(@user_search.query)
+        else
+
+        end
+      end
 
       def start_search
         ask_query
@@ -172,8 +190,14 @@ module Bot
         Bot::Messages::AlreadyFavorite.send(chat_id: @chat_id, item: item)
       end
 
+      def notice_unknown
+        Bot::Messages::Unknown.send(chat_id: @chat_id)
+      end
+
       def confirmed?(answer)
-        CONFIRMATION.include?(answer.downcase)
+        return false if answer.nil?
+
+        CONFIRMATION.include?(answer.downcase) 
       end
 
       def search_result
