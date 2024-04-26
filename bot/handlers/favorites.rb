@@ -18,9 +18,9 @@ module Bot
 
         favorites.each do |fav|
           res = SteamAPI::ItemPrice::Request.new(fav.item_hash).send
-          diff = fav.update_price!(res.median_price)
+          diff_o, diff_l = fav.update_price!(res.median_price)
 
-          prices << [fav.item_hash, res.median_price, diff]
+          prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
         end
         $bot.logger.debug(
           "User uid=\"#{ @chat_id }\". Favorites Composed: #{ prices }"

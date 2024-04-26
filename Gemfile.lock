@@ -35,6 +35,7 @@ GEM
       tzinfo (~> 2.0)
     base64 (0.2.0)
     bigdecimal (3.1.7)
+    chronic (0.10.2)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     drb (2.2.1)
@@ -77,6 +78,8 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (0.13.0)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     zeitwerk (2.6.13)
 
 PLATFORMS
@@ -89,6 +92,7 @@ DEPENDENCIES
   sqlite3 (~> 1.4)
   steam-api!
   telegram-bot-ruby (>= 1.0)!
+  whenever (~> 1.0)
 
 BUNDLED WITH
    2.4.10

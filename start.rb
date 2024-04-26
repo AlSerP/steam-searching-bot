@@ -1,6 +1,5 @@
 # Load Libraries
 require 'steam-api'
-require 'rubygems'
 require 'telegram/bot'
 require 'date'
 
