@@ -131,6 +131,7 @@ module Bot
             "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" start favoring"
           )
         else
+          finish_search!
           notice_already_favorite(search_result)
           $bot.logger.info(
             "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" already favoring"
