@@ -16,7 +16,7 @@ module Bot
         super(chat_id)
 
         @username = username
-        @user_search = @@current_searches[@chat_id]
+        @user_search = @@current_searches[@user.tg_id]
       end
 
       def perform(**args)
@@ -33,6 +33,7 @@ module Bot
       end
 
       def self.searching?(id)
+        $bot.logger.debug "Searching in #{@@current_searches} with #{id} is #{@@current_searches.key? id}"
         @@current_searches.key? id
       end
 
@@ -70,11 +71,11 @@ module Bot
       def start_search
         ask_query
 
-        @user_search = Bot::UserSearch.new(@chat_id)
-        @@current_searches[@chat_id] = @user_search
+        @user_search = Bot::UserSearch.new(@user.tg_id)
+        @@current_searches[@user.tg_id] = @user_search
         
         $bot.logger.info(
-          "User uid=\"#{ @chat_id }\" start searching. "\
+          "User uid=\"#{ @user.tg_id }\" start searching. "\
           "Searchers count=\"#{ @@current_searches.size }\""
         )
       end
@@ -86,7 +87,7 @@ module Bot
         response_s = request_s.send
 
         if response_s.empty?
-          $bot.logger.info("User uid=\"#{ @chat_id }\" query=\"#{ query }\". No result")
+          $bot.logger.info("User uid=\"#{ @user.tg_id }\" query=\"#{ query }\". No result")
           finish_search!
           notice_no_result
 
@@ -94,7 +95,7 @@ module Bot
         end
 
         $bot.logger.info(
-          "User uid=\"#{ @chat_id }\" query=\"#{ query }\". "\
+          "User uid=\"#{ @user.tg_id }\" query=\"#{ query }\". "\
           "Find #{ response_s.search_result_hash }"
         )
 
@@ -118,7 +119,7 @@ module Bot
           notice_favorite_canceled
           
           $bot.logger.info(
-            "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" cancel favoring"
+            "User uid=\"#{ @user.tg_id }\" item=\"#{ search_result_hash }\" cancel favoring"
           )
 
           return false
@@ -128,13 +129,13 @@ module Bot
           finish_search!
           notice_favorite_confirmed(search_result)
           $bot.logger.info(
-            "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" start favoring"
+            "User uid=\"#{ @user.tg_id }\" item=\"#{ search_result_hash }\" start favoring"
           )
         else
           finish_search!
           notice_already_favorite(search_result)
           $bot.logger.info(
-            "User uid=\"#{ @chat_id }\" item=\"#{ search_result_hash }\" already favoring"
+            "User uid=\"#{ @user.tg_id }\" item=\"#{ search_result_hash }\" already favoring"
           )
         end
 
@@ -143,20 +144,19 @@ module Bot
 
       def finish_search!
         @user_search.finish!
-        @@current_searches.delete @chat_id
+        @@current_searches.delete @user.tg_id
       end
 
       def add_to_favorite
-        favorite = Favorite.where(item_hash: search_result_hash, chat_id: @chat_id).to_a[0]
+        favorite = @user.favorites.where(item_hash: search_result_hash).to_a[0]
         
         return false unless favorite.nil?
 
         request = SteamAPI::ItemPrice::Request.new(search_result_hash)
         response = request.send
 
-        favorite = Favorite.create(
+        favorite = @user.favorites.create(
           item_hash: search_result_hash,
-          chat_id: @chat_id,
           price: response.median_price,
           original_price: response.median_price
         )
@@ -165,43 +165,43 @@ module Bot
       end
 
       def ask_quality(query)
-        Bot::Messages::AskQuality.send(chat_id: @chat_id, query: query)
+        Bot::Messages::AskQuality.send(chat_id: @user.tg_id, query: query)
       end
 
       def ask_query
-        Bot::Messages::StartSearch.send(chat_id: @chat_id)
+        Bot::Messages::StartSearch.send(chat_id: @user.tg_id)
       end
 
       def notice_perform_search(query)
-        Bot::Messages::PerformSearch.send(chat_id: @chat_id, query: query)
+        Bot::Messages::PerformSearch.send(chat_id: @user.tg_id, query: query)
       end
 
       def notice_no_result
-        Bot::Messages::NoResult.send(chat_id: @chat_id)
+        Bot::Messages::NoResult.send(chat_id: @user.tg_id)
       end
 
       def ask_confirm_favorite(result, price)
-        Bot::Messages::ConfirmFavorite.send(chat_id: @chat_id, result: result, price: price)
+        Bot::Messages::ConfirmFavorite.send(chat_id: @user.tg_id, result: result, price: price)
       end
 
       def notice_favorite_confirmed(item)
-        Bot::Messages::FavoriteConfirmed.send(chat_id: @chat_id, item: item)
+        Bot::Messages::FavoriteConfirmed.send(chat_id: @user.tg_id, item: item)
       end
 
       def notice_favorite_canceled
-        Bot::Messages::FavoriteCanceled.send(chat_id: @chat_id)
+        Bot::Messages::FavoriteCanceled.send(chat_id: @user.tg_id)
       end
 
       def notice_already_favorite(item)
-        Bot::Messages::AlreadyFavorite.send(chat_id: @chat_id, item: item)
+        Bot::Messages::AlreadyFavorite.send(chat_id: @user.tg_id, item: item)
       end
 
       def notice_unknown
-        Bot::Messages::Unknown.send(chat_id: @chat_id)
+        Bot::Messages::Unknown.send(chat_id: @user.tg_id)
       end
 
       def notice_steam_error
-        Bot::Messages::SteamError.send(chat_id: @chat_id)
+        Bot::Messages::SteamError.send(chat_id: @user.tg_id)
       end
 
       def confirmed?(answer)

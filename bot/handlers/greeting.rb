@@ -8,7 +8,7 @@ module Bot
       end
 
       def perform
-        Bot::Messages::Greeting.send(chat_id: @chat_id, username: @username)
+        Bot::Messages::Greeting.send(chat_id: @user.tg_id, username: @username)
       end
     end
   end

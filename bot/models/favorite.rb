@@ -1,4 +1,6 @@
 class Favorite < ActiveRecord::Base
+  belongs_to :user
+
   def update_price!(new_price)
     diff_o, diff_l = original_price_diff(new_price), last_price_diff(new_price) unless price.nil?
     update_attribute(:price, new_price)

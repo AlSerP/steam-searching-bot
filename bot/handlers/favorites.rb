@@ -8,12 +8,13 @@ module Bot
       end
 
       def perform
-        favorites = Favorite.where(chat_id: @chat_id)
+        favorites = @user.favorites
+
         prices = []
 
-        $bot.logger.info("User uid=\"#{ @chat_id }\" favorites count=\"#{ favorites.count }\". List")
+        $bot.logger.info("User uid=\"#{ @user.tg_id }\" favorites count=\"#{ favorites.count }\". List")
         $bot.logger.debug(
-          "User uid=\"#{ @chat_id }\". Favorites: #{favorites.map { |fav| fav.item_hash }}"
+          "User uid=\"#{ @user.tg_id }\". Favorites: #{favorites.map { |fav| fav.item_hash }}"
         )
 
         favorites.each do |fav|
@@ -24,12 +25,12 @@ module Bot
           prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
         end
         $bot.logger.debug(
-          "User uid=\"#{ @chat_id }\". Favorites Composed: #{ prices }"
+          "User uid=\"#{ @user.tg_id }\". Favorites Composed: #{ prices }"
         )
 
         prices.sort_by! { |p| -p[2][0][:percent] }
 
-        Bot::Messages::Favorites.send(chat_id: @chat_id, items: prices)
+        Bot::Messages::Favorites.send(chat_id: @user.tg_id, items: prices)
 
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
         Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
@@ -41,7 +42,7 @@ module Bot
       private 
 
       def notice_steam_error
-        Bot::Messages::SteamError.send(chat_id: @chat_id)
+        Bot::Messages::SteamError.send(chat_id: @user.tg_id)
       end
     end
   end

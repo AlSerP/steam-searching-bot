@@ -8,7 +8,7 @@ module Bot
       end
 
       def perform
-        Bot::Messages::Unknown.send(chat_id: @chat_id)
+        Bot::Messages::Unknown.send(chat_id: @user.tg_id)
       end
     end
   end

@@ -5,13 +5,13 @@ module Bot
 
       case message
       when Telegram::Bot::Types::CallbackQuery
-        id = message.from.id
+        id = message.from.id.to_s
         data = message.data
         $bot.logger.debug "Got callback from uid=\"#{id}\""
 
         Bot::Handlers::Search.new(id, user).perform(callback: data)
       when Telegram::Bot::Types::Message
-        id = message.chat.id
+        id = message.chat.id.to_s
         
         case message.text
         when '/start'
