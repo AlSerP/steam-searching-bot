@@ -27,6 +27,18 @@ module Bot
         )
 
         Bot::Messages::Favorites.send(chat_id: @chat_id, items: prices)
+
+      rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
+        Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+        
+        $bot.logger.error "Steam search error with #{e.message}" 
+        notice_steam_error
+      end
+
+      private 
+
+      def notice_steam_error
+        Bot::Messages::SteamError.send(chat_id: @chat_id)
       end
     end
   end

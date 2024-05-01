@@ -29,6 +29,9 @@ module Bot
           end
         end
       end
+
+    rescue Telegram::Bot::Exceptions::ResponseError => e
+      $bot.logger.error "Got error #{ e.message }" 
     end
   end
 end
