@@ -27,7 +27,7 @@ module Bot
           "User uid=\"#{ @chat_id }\". Favorites Composed: #{ prices }"
         )
 
-        prices.sort_by! { |p| p[2][0][:percent] }
+        prices.sort_by! { |p| -p[2][0][:percent] }
 
         Bot::Messages::Favorites.send(chat_id: @chat_id, items: prices)
 
