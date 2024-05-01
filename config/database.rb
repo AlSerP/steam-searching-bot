@@ -15,9 +15,9 @@ class Database
       )
 
       return false unless database_exists?
-      
-      # migrate unless ActiveRecord::Base.connection.table_exists?('favorites')
+
       migrate
+      log_current_models_report
 
       true
     end
@@ -67,6 +67,15 @@ class Database
       false
     else
       true
+    end
+
+    def log_current_models_report
+      logger.info "Current Users: #{User.count}"
+      logger.info "Current Favorites: #{Favorite.count}"
+    end
+
+    def logger
+      ActiveRecord::Base.logger
     end
   end
 end
