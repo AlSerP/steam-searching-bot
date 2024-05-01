@@ -3,7 +3,7 @@ module Bot
     class PerformSearch < Base
       class << self
         def text(args)
-          "Ищем предмет \"#{args[:query]}\""
+          "Ищем предмет \"#{args[:query].strip}\""
         end
       end
     end

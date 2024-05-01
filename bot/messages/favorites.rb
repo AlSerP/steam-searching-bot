@@ -7,7 +7,7 @@ module Bot
           args[:items].each do |item|
             message << "#{ item[0] }\n" \
             "Цена: #{ item[1] } (#{ price_diff_view(item[2][1][:price]) })\n"\
-            "За всё время: #{ price_diff_view(item[2][0][:price]) }руб."\
+            "За всё время: #{ price_diff_view(item[2][0][:price]) }"\
             "#{ percent_diff_view(item[2][0][:percent]) }\n\n"
           end
 
@@ -36,9 +36,9 @@ module Bot
           elsif diff.zero?
             "Нет изменений"
           elsif diff.positive?
-            "+#{diff.round(2)}"
+            "+#{diff.round(2)} руб."
           elsif diff.negative?
-            "-#{diff.abs.round(2)}"
+            "-#{diff.abs.round(2)} руб."
           else
             "Нет данных"
           end
