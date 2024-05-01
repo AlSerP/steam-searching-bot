@@ -11,7 +11,7 @@ module Bot
             "#{ percent_diff_view(item[2][0][:percent]) }\n\n"
           end
 
-          message << "Отчет за #{ DateTime.now.strftime('%d/%m/%Y - %H:%M') }"
+          message << "Отчет за #{ DateTime.now.new_offset(3.0/24).strftime('%d/%m/%Y - %H:%M') }"
         end
 
         private
