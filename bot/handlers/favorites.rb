@@ -18,13 +18,16 @@ module Bot
 
         favorites.each do |fav|
           res = SteamAPI::ItemPrice::Request.new(fav.item_hash).send
-          diff_o, diff_l = fav.update_price!(res.median_price)
-
+          diff = fav.update_price!(res.median_price)
+          diff_o, diff_l = diff[:original_diff], diff[:last_diff]
+          
           prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
         end
         $bot.logger.debug(
           "User uid=\"#{ @chat_id }\". Favorites Composed: #{ prices }"
         )
+
+        prices.sort { |p| p[2][1][:percent] }
 
         Bot::Messages::Favorites.send(chat_id: @chat_id, items: prices)
 
