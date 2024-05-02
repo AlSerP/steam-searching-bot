@@ -1,24 +1,8 @@
-# Load Libraries
-require 'steam-api'
-require 'telegram/bot'
-require 'date'
+require_relative 'config/config'
 
-# Configure
+# Connect and configure database
 require_relative 'config/database'
 
 raise "Can't connect to the Database" unless Database.configure
 
-module Bot
-  module Config
-    TOKEN_PATH = 'config/token'
-    $bot = nil
-  end
-end 
-
-
-# Load components
-require_relative 'bot/models'
-require_relative 'bot/messages'
-require_relative 'bot/handlers'
-require_relative 'bot/main_handler'
 require_relative 'bot/bot'

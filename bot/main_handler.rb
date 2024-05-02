@@ -31,7 +31,8 @@ module Bot
       end
 
     rescue Telegram::Bot::Exceptions::ResponseError => e
-      $bot.logger.error "Got error #{ e.message }" 
+      $bot.logger.error "Got error #{ e.message }"
+      sleep(Bot::Config::ERROR_TIMEOUT)
     end
   end
 end

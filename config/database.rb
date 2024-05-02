@@ -1,8 +1,7 @@
-require 'active_record'
 require 'sqlite3'
 
 require_relative '../migrations/migration'
-require_relative '../bot/models'
+# require_relative '../bot/models'
 
 class Database
   class << self
