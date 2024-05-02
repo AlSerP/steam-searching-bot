@@ -3,6 +3,7 @@ require 'steam-api'
 require 'telegram/bot'
 require 'date'
 require 'active_record'
+require 'rake'
 
 module Bot
   module Config
