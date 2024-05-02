@@ -18,3 +18,8 @@ require_relative '../bot/models'
 require_relative '../bot/messages'
 require_relative '../bot/handlers'
 require_relative '../bot/main_handler'
+
+# Connect and configure database
+require_relative 'database'
+
+raise "Can't connect to the Database" unless Database.configure

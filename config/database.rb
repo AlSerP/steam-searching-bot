@@ -16,7 +16,6 @@ class Database
       return false unless database_exists?
 
       migrate
-      log_current_models_report
 
       true
     end
