@@ -12,8 +12,9 @@ EXPOSE 3008
 
 ADD . /app
 
-# RUN bundle exec whenever --update-crontab
+RUN touch /var/log/cron_log.log
+RUN bundle exec whenever --update-crontab
 # RUN service cron restart
 # * * * * * /bin/bash -l -c 'cd /app && bundle exec rake test:write_to_file'
 
-CMD ["bundle", "exec", "ruby", "start.rb"]
+CMD service cron start && bundle exec ruby start.rb

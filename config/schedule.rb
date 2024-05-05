@@ -18,8 +18,10 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-# set :output, {:error => "/app/jobs/cron_error_log.log", :standard => "/app/jobs/cron_log.log"}
+set :output, {:error => "/var/log/cron_log.log", :standard => "/var/log/cron_log.log"}
+# set :job_template, "/bin/bash -l -c ':job'"
+job_type :custom_rake, "cd :path && bundle install && bundle exec rake :task --silent :output"
 
 every 1.minute do
-  rake "test:write_to_file"
+  custom_rake "test:write_to_file"
 end
