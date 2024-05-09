@@ -15,6 +15,8 @@ module Bot
 
           message << "Отчет за #{ DateTime.now.new_offset(3.0/24).strftime('%d/%m/%Y - %H:%M') }"
           message << "\nЧтобы отключить регулярную рассылку: /disable_reports" if args[:report]
+
+          message
         end
 
         private
