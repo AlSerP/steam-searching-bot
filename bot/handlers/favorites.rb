@@ -37,6 +37,9 @@ module Bot
         
         $bot.logger.error "Steam search error with #{e.message}" 
         notice_steam_error
+      rescue NoMethodError
+        $bot.logger.error "Steam search error with #{e.message}" 
+        notice_steam_error
       end
 
       private 
