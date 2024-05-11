@@ -31,14 +31,13 @@ module Bot
         prices.sort_by! { |p| -p[2][0][:percent] }
 
         Bot::Messages::Favorites.send(chat_id: @user.tg_id, items: prices)
-
+      rescue SteamResponseError => e
+        $bot.logger.error "Steam error #{e.message} with #{e.response}" 
+        notice_steam_error
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
         Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
         
         $bot.logger.error "Steam search error with #{e.message}" 
-        notice_steam_error
-      rescue NoMethodError
-        $bot.logger.error "Steam search error" 
         notice_steam_error
       end
 

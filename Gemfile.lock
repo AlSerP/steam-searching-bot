@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/AlSerP/steam-api.git
-  revision: b0b86e60c80fd7584775cabb22e0ebd66f94a8ad
+  revision: 02b69f323fcca2ae63b0cb7167bd3785dbfa1152
   specs:
     steam-api (0.1.0)
 
@@ -34,7 +34,7 @@ GEM
       mutex_m
       tzinfo (~> 2.0)
     base64 (0.2.0)
-    bigdecimal (3.1.7)
+    bigdecimal (3.1.8)
     chronic (0.10.2)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
@@ -65,11 +65,11 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.1.0)
       net-http
-    i18n (1.14.4)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     minitest (5.22.3)
-    multipart-post (2.4.0)
+    multipart-post (2.4.1)
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -98,4 +98,4 @@ DEPENDENCIES
   whenever (~> 1.0)
 
 BUNDLED WITH
-   2.4.10
+   2.5.6
