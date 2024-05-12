@@ -4,7 +4,7 @@ module Bot
       class << self
         def text(args)
           message = "Ваши избранные предметы:\n"
-          message = "Резулярный отчет:\n" if args[:report]
+          message = "Регулярный отчет:\n" if args[:report]
 
           args[:items].each do |item|
             message << "#{ item[0] }\n" \
