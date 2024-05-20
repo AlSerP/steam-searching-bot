@@ -7,12 +7,11 @@ require 'rake'
 
 module Bot
   module Config
-    TOKEN_PATH = 'config/token'
+    TOKEN_PATH = 'config/token'.freeze
     ERROR_TIMEOUT = 5 # sec
     $bot = nil
   end
-end 
-
+end
 
 # Load components
 require_relative '../bot/models'

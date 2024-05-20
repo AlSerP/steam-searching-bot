@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'rake'
 
-Dir.glob('jobs/*.rake').each {|r| import r}
+Dir.glob('jobs/*.rake').each { |r| import r }
 
 # pwd=Dir.pwd
 # Dir.chdir('jobs') # We'll load rakefile from the gem's dir.

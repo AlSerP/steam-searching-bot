@@ -4,11 +4,11 @@ module Bot
       class << self
         def text(args)
           "Результат поиска:\n"\
-          "#{ args[:result] } | Цена: #{ args[:price] }\n\n"\
-          "Добавить в избранное?"
+          "#{args[:result]} | Цена: #{args[:price]}\n\n"\
+          'Добавить в избранное?'
         end
 
-        def markup(args)
+        def markup(_args)
           kb = [[
             Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Да', callback_data: 'yes'),
             Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Нет', callback_data: 'no')

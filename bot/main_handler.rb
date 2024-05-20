@@ -12,7 +12,7 @@ module Bot
         Bot::Handlers::Search.new(id, user).perform(callback: data)
       when Telegram::Bot::Types::Message
         id = message.chat.id.to_s
-        
+
         case message.text
         when '/start'
           Bot::Handlers::Greeting.new(id, user).perform
@@ -33,9 +33,8 @@ module Bot
           end
         end
       end
-
     rescue Telegram::Bot::Exceptions::ResponseError => e
-      $bot.logger.error "Got error #{ e.message }"
+      $bot.logger.error "Got error #{e.message}"
       sleep(Bot::Config::ERROR_TIMEOUT)
     end
   end

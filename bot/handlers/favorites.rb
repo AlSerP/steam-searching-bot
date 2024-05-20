@@ -12,36 +12,39 @@ module Bot
 
         prices = []
 
-        $bot.logger.info("User uid=\"#{ @user.tg_id }\" favorites count=\"#{ favorites.count }\". List")
+        $bot.logger.info(
+          "User uid=\"#{@user.tg_id}\" favorites count=\"#{favorites.count}\". List"
+        )
         $bot.logger.debug(
-          "User uid=\"#{ @user.tg_id }\". Favorites: #{favorites.map { |fav| fav.item_hash }}"
+          "User uid=\"#{@user.tg_id}\". Favorites: #{favorites.map(&:item_hash)}"
         )
 
         favorites.each do |fav|
           res = SteamAPI::ItemPrice::Request.new(fav.item_hash).send
           diff = fav.update_price!(res.median_price)
-          diff_o, diff_l = diff[:original_diff], diff[:last_diff]
-          
+          diff_o = diff[:original_diff]
+          diff_l = diff[:last_diff]
+
           prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
         end
         $bot.logger.debug(
-          "User uid=\"#{ @user.tg_id }\". Favorites Composed: #{ prices }"
+          "User uid=\"#{@user.tg_id}\". Favorites Composed: #{prices}"
         )
 
         prices.sort_by! { |p| -p[2][0][:percent] }
 
         Bot::Messages::Favorites.send(chat_id: @user.tg_id, items: prices)
       rescue SteamResponseError => e
-        $bot.logger.error "Steam error #{e.message} with #{e.response}" 
+        $bot.logger.error "Steam error #{e.message} with #{e.response}"
         notice_steam_error
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
-        Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-        
-        $bot.logger.error "Steam search error with #{e.message}" 
+             Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+
+        $bot.logger.error "Steam search error with #{e.message}"
         notice_steam_error
       end
 
-      private 
+      private
 
       def notice_steam_error
         Bot::Messages::SteamError.send(chat_id: @user.tg_id)

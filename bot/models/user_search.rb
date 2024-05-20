@@ -1,11 +1,11 @@
 module Bot
   class UserSearch
-    SEARCH_STATUSES = [
-      :entering_query,
-      :choosing_quality,
-      :searching,
-      :confirmation,
-      :finished
+    SEARCH_STATUSES = %i[
+      entering_query
+      choosing_quality
+      searching
+      confirmation
+      finished
     ].freeze
 
     attr_reader :status, :results
@@ -25,7 +25,7 @@ module Bot
     def next_step!
       status_id = SEARCH_STATUSES.find_index(@status) + 1
       @status = SEARCH_STATUSES[status_id] if status_id < SEARCH_STATUSES.size
-      $bot.logger.debug("User uid=\"#{ @id }\" new status=\"#{ @status }\"")
+      $bot.logger.debug("User uid=\"#{@id}\" new status=\"#{@status}\"")
 
       @status
     end

@@ -5,7 +5,7 @@ module Bot
         def text(args)
           "Предмет добавлен в ваше избранное:\n"\
           "#{args[:item]}\n\n"\
-          "Продолжить поиск /search"
+          'Продолжить поиск /search'
         end
       end
     end

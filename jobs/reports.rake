@@ -3,8 +3,8 @@ require 'date'
 require_relative '../config/config'
 
 namespace :reports do
-  TOKEN = File.read(Bot::Config::TOKEN_PATH)
-  $bot = Telegram::Bot::Client.new(TOKEN)
+  token = File.read(Bot::Config::TOKEN_PATH).frozen
+  $bot = Telegram::Bot::Client.new(token)
 
   task :send do
     User.where(report_delivery: true).each do |user|
@@ -17,8 +17,9 @@ namespace :reports do
       favorites.each do |fav|
         res = SteamAPI::ItemPrice::Request.new(fav.item_hash).send
         diff = fav.update_price!(res.median_price)
-        diff_o, diff_l = diff[:original_diff], diff[:last_diff]
-        
+        diff_o = diff[:original_diff]
+        diff_l = diff[:last_diff]
+
         prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
       end
 

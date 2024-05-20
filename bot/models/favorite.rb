@@ -2,10 +2,13 @@ class Favorite < ActiveRecord::Base
   belongs_to :user
 
   def update_price!(new_price)
-    diff_o, diff_l = original_price_diff(new_price), last_price_diff(new_price) unless price.nil?
+    unless price.nil?
+      diff_o = original_price_diff(new_price)
+      diff_l = last_price_diff(new_price)
+    end
     update_attribute(:price, new_price)
 
-    { 
+    {
       original_diff: { price: diff_o, percent: percent_diff(diff_o) },
       last_diff: { price: diff_l, percent: percent_diff(diff_l) }
     }
@@ -15,11 +18,13 @@ class Favorite < ActiveRecord::Base
 
   def original_price_diff(new_price)
     return unless original_price
+
     price_to_f(new_price) - price_to_f(original_price)
   end
 
   def last_price_diff(new_price)
     return unless original_price
+
     price_to_f(new_price) - price_to_f(price)
   end
 

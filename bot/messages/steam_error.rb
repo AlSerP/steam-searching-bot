@@ -2,9 +2,9 @@ module Bot
   module Messages
     class SteamError < Base
       class << self
-        def text(args)
+        def text(_args)
           "Не удалось подключитсья к Steam.\n" \
-          "Попробуйте позже"
+          'Попробуйте позже'
         end
       end
     end

@@ -4,7 +4,7 @@ module Bot
       class << self
         def text(args); end
 
-        def markup(args)
+        def markup(_args)
           nil
         end
 

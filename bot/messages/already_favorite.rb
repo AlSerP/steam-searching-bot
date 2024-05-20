@@ -4,7 +4,7 @@ module Bot
       class << self
         def text(args)
           "Предмет уже в избранном:\n"\
-          "#{ args[:item] }"
+          "#{args[:item]}"
         end
       end
     end

@@ -1,7 +1,7 @@
 module Bot
   module Handlers
     class Search < Bot::Handlers::Base
-      CONFIRMATION = ['да', 'д', 'yes', 'y']
+      CONFIRMATION = %w[да д yes y].freeze
       QUALITIES = {
         'bs' => '(Закаленное в боях)',
         'ww' => '(Поношенное)',
@@ -9,7 +9,7 @@ module Bot
         'mw' => '(Немного поношенное)',
         'fn' => '(Прямо с завода)',
         'no' => ''
-      }
+      }.freeze
       @@current_searches = {}
 
       def initialize(chat_id, username)
@@ -26,14 +26,16 @@ module Bot
           perform_message(args)
         end
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
-        Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-        
-        $bot.logger.error "Steam search error with #{e.message}" 
+             Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+
+        $bot.logger.error "Steam search error with #{e.message}"
         notice_steam_error
       end
 
       def self.searching?(id)
-        $bot.logger.debug "Searching in #{@@current_searches} with #{id} is #{@@current_searches.key? id}"
+        $bot.logger.debug(
+          "Searching in #{@@current_searches} with #{id} is #{@@current_searches.key? id}"
+        )
         @@current_searches.key? id
       end
 
@@ -46,7 +48,7 @@ module Bot
           quality = args[:callback]
           $bot.logger.info "Callback with #{quality}"
 
-          @user_search.query = [@user_search.query, QUALITIES[quality]].join(' ') 
+          @user_search.query = [@user_search.query, QUALITIES[quality]].join(' ')
           handle_query(@user_search.query)
         elsif @user_search.confirming?
           answer = args[:callback]
@@ -63,8 +65,6 @@ module Bot
           @user_search.query = args[:message]
           @user_search.next_step!
           ask_quality(@user_search.query)
-        else
-
         end
       end
 
@@ -73,10 +73,10 @@ module Bot
 
         @user_search = Bot::UserSearch.new(@user.tg_id)
         @@current_searches[@user.tg_id] = @user_search
-        
+
         $bot.logger.info(
-          "User uid=\"#{ @user.tg_id }\" start searching. "\
-          "Searchers count=\"#{ @@current_searches.size }\""
+          "User uid=\"#{@user.tg_id}\" start searching. "\
+          "Searchers count=\"#{@@current_searches.size}\""
         )
       end
 
@@ -87,7 +87,7 @@ module Bot
         response_s = request_s.send
 
         if response_s.empty?
-          $bot.logger.info("User uid=\"#{ @user.tg_id }\" query=\"#{ query }\". No result")
+          $bot.logger.info("User uid=\"#{@user.tg_id}\" query=\"#{query}\". No result")
           finish_search!
           notice_no_result
 
@@ -95,16 +95,16 @@ module Bot
         end
 
         $bot.logger.info(
-          "User uid=\"#{ @user.tg_id }\" query=\"#{ query }\". "\
-          "Find #{ response_s.search_result_hash }"
+          "User uid=\"#{@user.tg_id}\" query=\"#{query}\". "\
+          "Find #{response_s.search_result_hash}"
         )
 
         request_p = SteamAPI::ItemPrice::Request.new(response_s.search_result_hash)
         response_p = request_p.send
 
         $bot.logger.debug(
-          "Price for item_hash=\"#{ response_s.search_result_hash }\""\
-          "price=\"#{ response_p.median_price }\""
+          "Price for item_hash=\"#{response_s.search_result_hash}\""\
+          "price=\"#{response_p.median_price}\""
         )
 
         @user_search.add_results([response_s])
@@ -117,25 +117,24 @@ module Bot
         unless confirmed?(answer)
           finish_search!
           notice_favorite_canceled
-          
+
           $bot.logger.info(
-            "User uid=\"#{ @user.tg_id }\" item=\"#{ search_result_hash }\" cancel favoring"
+            "User uid=\"#{@user.tg_id}\" item=\"#{search_result_hash}\" cancel favoring"
           )
 
           return false
         end
 
+        finish_search!
         if add_to_favorite
-          finish_search!
           notice_favorite_confirmed(search_result)
           $bot.logger.info(
-            "User uid=\"#{ @user.tg_id }\" item=\"#{ search_result_hash }\" start favoring"
+            "User uid=\"#{@user.tg_id}\" item=\"#{search_result_hash}\" start favoring"
           )
         else
-          finish_search!
           notice_already_favorite(search_result)
           $bot.logger.info(
-            "User uid=\"#{ @user.tg_id }\" item=\"#{ search_result_hash }\" already favoring"
+            "User uid=\"#{@user.tg_id}\" item=\"#{search_result_hash}\" already favoring"
           )
         end
 
@@ -149,13 +148,13 @@ module Bot
 
       def add_to_favorite
         favorite = @user.favorites.where(item_hash: search_result_hash).to_a[0]
-        
+
         return false unless favorite.nil?
 
         request = SteamAPI::ItemPrice::Request.new(search_result_hash)
         response = request.send
 
-        favorite = @user.favorites.create(
+        @user.favorites.create(
           item_hash: search_result_hash,
           price: response.median_price,
           original_price: response.median_price
@@ -207,7 +206,7 @@ module Bot
       def confirmed?(answer)
         return false if answer.nil?
 
-        CONFIRMATION.include?(answer.downcase) 
+        CONFIRMATION.include?(answer.downcase)
       end
 
       def search_result
