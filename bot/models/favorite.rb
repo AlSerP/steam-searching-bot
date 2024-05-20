@@ -14,10 +14,12 @@ class Favorite < ActiveRecord::Base
   private
 
   def original_price_diff(new_price)
+    return unless original_price
     price_to_f(new_price) - price_to_f(original_price)
   end
 
   def last_price_diff(new_price)
+    return unless original_price
     price_to_f(new_price) - price_to_f(price)
   end
 

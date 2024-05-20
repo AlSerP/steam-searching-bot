@@ -20,6 +20,10 @@ module Bot
           Bot::Handlers::Search.new(id, user).perform
         when '/favorites'
           Bot::Handlers::Favorites.new(id, user).perform
+        when '/enable_reports'
+          Bot::Handlers::EnableReportDelivery.new(id, user).perform
+        when '/disable_reports'
+          Bot::Handlers::DisableReportDelivery.new(id, user).perform
         else
           if Bot::Handlers::Search.searching?(id)
             $bot.logger.debug "User uid=\"#{id}\" continues search"

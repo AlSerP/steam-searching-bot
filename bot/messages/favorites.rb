@@ -4,6 +4,8 @@ module Bot
       class << self
         def text(args)
           message = "Ваши избранные предметы:\n"
+          message = "Регулярный отчет:\n" if args[:report]
+
           args[:items].each do |item|
             message << "#{ item[0] }\n" \
             "Цена: #{ item[1] } (#{ price_diff_view(item[2][1][:price]) })\n"\
@@ -12,6 +14,9 @@ module Bot
           end
 
           message << "Отчет за #{ DateTime.now.new_offset(3.0/24).strftime('%d/%m/%Y - %H:%M') }"
+          message << "\nЧтобы отключить регулярную рассылку: /disable_reports" if args[:report]
+
+          message
         end
 
         private

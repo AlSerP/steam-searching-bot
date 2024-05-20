@@ -67,6 +67,10 @@ class Database
       true
     end
 
+    def test
+      File.write('/app/jobs/test_file.txt', "Hello, world!\n")
+    end
+
     def log_current_models_report
       logger.info "Current Users: #{User.count}"
       logger.info "Current Favorites: #{Favorite.count}"
