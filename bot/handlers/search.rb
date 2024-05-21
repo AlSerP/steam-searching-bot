@@ -147,16 +147,22 @@ module Bot
       end
 
       def add_to_favorite
-        favorite = @user.favorites.where(item_hash: search_result_hash).to_a[0]
+        favorite = @user.favorites.with_item(search_result_hash).to_a[0]
+
+        $bot.logger.info(
+          "Favorites result hash=\"#{search_result_hash}\" result=\"#{favorite}\""
+        )
 
         return false unless favorite.nil?
 
         request = SteamAPI::ItemPrice::Request.new(search_result_hash)
         response = request.send
 
+        item = Item.find_or_create_by(hash_name: search_result_hash)
+        item.price = response.median_price
+
         @user.favorites.create(
-          item_hash: search_result_hash,
-          price: response.median_price,
+          item: item,
           original_price: response.median_price
         )
 

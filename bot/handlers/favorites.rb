@@ -16,16 +16,16 @@ module Bot
           "User uid=\"#{@user.tg_id}\" favorites count=\"#{favorites.count}\". List"
         )
         $bot.logger.debug(
-          "User uid=\"#{@user.tg_id}\". Favorites: #{favorites.map(&:item_hash)}"
+          "User uid=\"#{@user.tg_id}\". Favorites: #{favorites.includes(:item).map {|fav| fav.item.hash_name}}"
         )
 
         favorites.each do |fav|
-          res = SteamAPI::ItemPrice::Request.new(fav.item_hash).send
+          res = SteamAPI::ItemPrice::Request.new(fav.item.hash_name).send
           diff = fav.update_price!(res.median_price)
           diff_o = diff[:original_diff]
           diff_l = diff[:last_diff]
 
-          prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
+          prices << [fav.item.hash_name, res.median_price, [diff_o, diff_l]]
         end
         $bot.logger.debug(
           "User uid=\"#{@user.tg_id}\". Favorites Composed: #{prices}"

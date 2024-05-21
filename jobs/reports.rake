@@ -14,13 +14,13 @@ namespace :reports do
 
       prices = []
 
-      favorites.each do |fav|
-        res = SteamAPI::ItemPrice::Request.new(fav.item_hash).send
+      favorites.includes(:item).each do |fav|
+        res = SteamAPI::ItemPrice::Request.new(fav.item.hash_name).send
         diff = fav.update_price!(res.median_price)
         diff_o = diff[:original_diff]
         diff_l = diff[:last_diff]
 
-        prices << [fav.item_hash, res.median_price, [diff_o, diff_l]]
+        prices << [fav.item.hash_name, res.median_price, [diff_o, diff_l]]
       end
 
       prices.sort_by! { |p| -p[2][0][:percent] }
