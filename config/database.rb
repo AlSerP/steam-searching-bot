@@ -6,7 +6,7 @@ require_relative '../migrations/migration'
 class Database
   class << self
     def configure
-      ActiveRecord::Base.logger = Logger.new($stderr)
+      ActiveRecord::Base.logger = Logger.new('logs/db.log')
 
       ActiveRecord::Base.establish_connection(
         adapter: 'sqlite3',
