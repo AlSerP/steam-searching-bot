@@ -3,10 +3,18 @@ require 'date'
 require_relative '../config/config'
 
 namespace :reports do
-  token = File.read(Bot::Config::TOKEN_PATH).frozen
+  token = File.read(Bot::Config::TOKEN_PATH)
   $bot = Telegram::Bot::Client.new(token)
+  logger = Logger.new('logs/tasks.log')
 
   task :send do
+    logger.info 'Start item price updating'
+    Item.all.each do |item|
+      res = SteamAPI::ItemPrice::Request.new(item.hash_name).send
+      item.update_price!(res.median_price)
+    end
+    logger.info "Updated #{Item.count} items"
+
     User.where(report_delivery: true).each do |user|
       favorites = user.favorites
 
@@ -14,19 +22,18 @@ namespace :reports do
 
       prices = []
 
-      favorites.includes(:item).each do |fav|
-        res = SteamAPI::ItemPrice::Request.new(fav.item.hash_name).send
-        diff = fav.update_price!(res.median_price)
+      favorites.each do |fav|
+        diff = fav.current_diff
         diff_o = diff[:original_diff]
         diff_l = diff[:last_diff]
 
-        prices << [fav.item.hash_name, res.median_price, [diff_o, diff_l]]
+        prices << [fav.item.hash_name, diff[:price], [diff_o, diff_l]]
       end
 
       prices.sort_by! { |p| -p[2][0][:percent] }
 
       Bot::Messages::Favorites.send(chat_id: user.tg_id, items: prices, report: true)
-      puts "Report sended to #{user.tg_id}"
+      logger.info "Send report to #{user.tg_id}"
     end
   end
 end

@@ -1,5 +1,4 @@
 config/token
 db/*
 *.sqlite3
-logs/db.log
-logs/main.log
+logs/*.log
