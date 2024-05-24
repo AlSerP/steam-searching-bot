@@ -160,6 +160,7 @@ module Bot
 
         item = Item.find_or_create_by(hash_name: search_result_hash)
         item.price = response.median_price
+        item.save
 
         @user.favorites.create(
           item: item,

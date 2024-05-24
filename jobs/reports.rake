@@ -5,13 +5,14 @@ require_relative '../config/config'
 namespace :reports do
   token = File.read(Bot::Config::TOKEN_PATH)
   $bot = Telegram::Bot::Client.new(token)
-  logger = Logger.new('logs/tasks.log')
+  logger = Logger.new(Bot::Config::TASKS_LOGS)
 
   task :send do
     logger.info 'Start item price updating'
     Item.all.each do |item|
-      res = SteamAPI::ItemPrice::Request.new(item.hash_name).send
-      item.update_price!(res.median_price)
+      # res = SteamAPI::ItemPrice::Request.new(item.hash_name).send
+      # item.update_price!(res.median_price)
+      item.update_price!
     end
     logger.info "Updated #{Item.count} items"
 

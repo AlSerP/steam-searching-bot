@@ -10,6 +10,10 @@ module Bot
     TOKEN_PATH = 'config/token'.freeze
     ERROR_TIMEOUT = 5 # sec
     $bot = nil
+
+    MAIN_LOGS = 'logs/main.log'.freeze
+    DB_LOGS = 'logs/db.log'.freeze
+    TASKS_LOGS = 'logs/tasks.log'.freeze
   end
 end
 

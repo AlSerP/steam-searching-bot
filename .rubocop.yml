@@ -1,0 +1,14 @@
+Style/Encoding:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 99
+
+Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GlobalVars:
+  Enabled: false

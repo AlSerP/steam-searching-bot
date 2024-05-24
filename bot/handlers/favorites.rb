@@ -22,9 +22,7 @@ module Bot
         favorites.includes(:item).each do |fav|
           current_price = nil
           if fav.item.updated_at.nil? || fav.item.updated_at < DateTime.now - 10.minutes
-            res = SteamAPI::ItemPrice::Request.new(fav.item.hash_name).send
-            current_price = res.median_price
-            diff = fav.update_price!(current_price)
+            diff = fav.update_price!
           else
             diff = fav.current_diff
             current_price = diff[:price]
@@ -43,7 +41,7 @@ module Bot
 
         Bot::Messages::Favorites.send(chat_id: @user.tg_id, items: prices)
       rescue NoMethodError => e
-        $bot.logger.error "NoMethod #{e.message} with #{prices}"
+        $bot.logger.error "NoMethod #{e.message} with #{prices} backtrace #{e.backtrace}"
       rescue SteamResponseError => e
         $bot.logger.error "Steam error #{e.message} with #{e.response}"
         notice_steam_error
