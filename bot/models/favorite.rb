@@ -18,14 +18,12 @@ class Favorite < ActiveRecord::Base
     unless item_price.nil?
       diff_o = original_price_diff(item_price)
       diff_l = last_price_diff(item_price)
+
+      update_attribute(:last_price, item_price)
     end
 
-    $bot.logger.debug "Diff_o #{diff_o} | Diff_l #{diff_l}"
-
-    update_attribute(:last_price, item_price)
-
     {
-      price: item_price,
+      price: last_price,
       original_price: original_price,
       original_diff: { price: diff_o, percent: percent_diff(diff_o) },
       last_diff: { price: diff_l, percent: percent_diff(diff_l) }
