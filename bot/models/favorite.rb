@@ -13,8 +13,6 @@ class Favorite < ActiveRecord::Base
     item.update_price! if item.price.nil?
     item_price = item.price
 
-    $bot.logger.debug "New item price #{item_price}"
-
     unless item_price.nil?
       diff_o = original_price_diff(item_price)
       diff_l = last_price_diff(item_price)
