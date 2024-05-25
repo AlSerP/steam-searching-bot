@@ -10,9 +10,8 @@ namespace :reports do
   task :send do
     logger.info 'Start item price updating'
     Item.all.each do |item|
-      # res = SteamAPI::ItemPrice::Request.new(item.hash_name).send
-      # item.update_price!(res.median_price)
       item.update_price!
+      sleep(0.5)
     end
     logger.info "Updated #{Item.count} items"
 

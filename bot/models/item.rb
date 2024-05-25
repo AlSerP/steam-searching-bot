@@ -3,7 +3,7 @@ class Item < ActiveRecord::Base
 
   def update_price!
     res = SteamAPI::ItemPrice::Request.new(hash_name).send
-    return if res.nil?
+    return if res.empty?
 
     new_price = price_to_f(res.median_price)
 
