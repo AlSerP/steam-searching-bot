@@ -202,10 +202,6 @@ module Bot
         Bot::Messages::AlreadyFavorite.send(chat_id: @user.tg_id, item: item)
       end
 
-      def notice_unknown
-        Bot::Messages::Unknown.send(chat_id: @user.tg_id)
-      end
-
       def notice_steam_error
         Bot::Messages::SteamError.send(chat_id: @user.tg_id)
       end

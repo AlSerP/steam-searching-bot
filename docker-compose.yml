@@ -6,7 +6,7 @@ services:
     volumes:
       - ./db/:/root/db/
   bot:
-    restart: always
+    # restart: always
     container_name: bot
     build: .
     volumes:

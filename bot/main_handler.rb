@@ -2,6 +2,7 @@ module Bot
   class MainHandler
     def self.perform(message)
       user = message.from.first_name
+      m_id = message.message_id
 
       case message
       when Telegram::Bot::Types::CallbackQuery
@@ -20,6 +21,8 @@ module Bot
           Bot::Handlers::Search.new(id, user).perform
         when '/favorites'
           Bot::Handlers::Favorites.new(id, user).perform
+        when '/inventory'
+          Bot::Handlers::InventoryItems.new(id, user).perform
         when '/enable_reports'
           Bot::Handlers::EnableReportDelivery.new(id, user).perform
         when '/disable_reports'
@@ -28,6 +31,8 @@ module Bot
           if Bot::Handlers::Search.searching?(id)
             $bot.logger.debug "User uid=\"#{id}\" continues search"
             Bot::Handlers::Search.new(id, user).perform(message: message.text)
+          elsif Bot::Handlers::InventoryItems.setting?(id)
+            Bot::Handlers::InventoryItems.new(id, user).perform(message: message.text)
           else
             Bot::Handlers::Unknown.new(id, user).perform
           end

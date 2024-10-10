@@ -3,7 +3,13 @@ class Item < ActiveRecord::Base
 
   def update_price!
     res = SteamAPI::ItemPrice::Request.new(hash_name).send
-    return if res.empty?
+
+    if res.empty? || !res.success? || res.median_price.nil?
+      $bot.logger.debug "Skipped #{hash_name}"
+      return
+    end
+
+    $bot.logger.debug "Request is #{hash_name} - #{res.inspect}"
 
     new_price = price_to_f(res.median_price)
 

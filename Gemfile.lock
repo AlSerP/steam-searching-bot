@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/AlSerP/steam-api.git
-  revision: 6c1ec92f2a4f842f2fe9f7c73d2226409561203f
+  revision: a7b8a922aea7ee4c5c353aaca243623c33acc9c7
   specs:
     steam-api (0.1.0)
 
