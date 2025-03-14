@@ -6,7 +6,13 @@ services:
     volumes:
       - ./db/:/root/db/
   bot:
+<<<<<<< Updated upstream
     # restart: always
+=======
+    restart: always
+    extra_hosts:
+      - "steamcommunity.com:2.16.174.204"
+>>>>>>> Stashed changes
     container_name: bot
     build: .
     volumes:
