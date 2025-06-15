@@ -2,7 +2,6 @@ module Bot
   class MainHandler
     def self.perform(message)
       user = message.from.first_name
-      m_id = message.message_id
 
       case message
       when Telegram::Bot::Types::CallbackQuery

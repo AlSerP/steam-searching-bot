@@ -73,13 +73,8 @@ GEM
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
+    pg (1.5.9)
     rake (13.2.1)
-    sqlite3 (1.7.3-aarch64-linux)
-    sqlite3 (1.7.3-arm-linux)
-    sqlite3 (1.7.3-arm64-darwin)
-    sqlite3 (1.7.3-x86-linux)
-    sqlite3 (1.7.3-x86_64-darwin)
-    sqlite3 (1.7.3-x86_64-linux)
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -99,8 +94,8 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 7.1)
   faraday-multipart (~> 1.0)
+  pg
   rake (~> 13.2.1)
-  sqlite3 (~> 1.4)
   steam-api!
   telegram-bot-ruby (>= 1.0)!
   whenever (~> 1.0)

@@ -10,8 +10,8 @@ class Favorite < ActiveRecord::Base
   end
 
   def current_diff
-    item.update_price! if item.price.nil?
-    item_price = item.price
+    item.update_price! if item.current_price.nil?
+    item_price = item.current_price
 
     unless item_price.nil?
       diff_o = original_price_diff(item_price)

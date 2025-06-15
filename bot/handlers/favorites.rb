@@ -20,7 +20,7 @@ module Bot
         )
 
         favorites.includes(:item).each do |fav|
-          if fav.item.updated_at.nil? || fav.item.updated_at < DateTime.now - 10.minutes
+          if fav.item.updated_at < DateTime.now - 10.minutes
             diff = fav.update_price!
           else
             diff = fav.current_diff

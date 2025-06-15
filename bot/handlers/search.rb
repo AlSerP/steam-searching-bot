@@ -155,16 +155,12 @@ module Bot
 
         return false unless favorite.nil?
 
-        request = SteamAPI::ItemPrice::Request.new(search_result_hash)
-        response = request.send
-
         item = Item.find_or_create_by(hash_name: search_result_hash)
-        item.price = response.median_price
-        item.save
+        price = item.update_price!
 
         @user.favorites.create(
-          item: item,
-          original_price: response.median_price
+          item_id: item.id,
+          original_price: price
         )
 
         true

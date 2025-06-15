@@ -1,13 +1,24 @@
 services:
-  sqlite3:
-    image: nouchka/sqlite3:latest
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./db/:/root/db/
+  # sqlite3:
+  #   image: nouchka/sqlite3:latest
+  #   stdin_open: true
+  #   tty: true
+  #   volumes:
+  #     - ./db/:/root/db/
   bot:
     # restart: always
     container_name: bot
     build: .
     volumes:
       - .:/app
+    environment:
+      DATABASE_HOST: db
+      DATABASE_DATABASE: steam_item_stat_development
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: passw0rd
+    networks:
+      - sis-network
+
+networks:
+  sis-network:
+    external: true

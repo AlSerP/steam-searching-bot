@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 # Database gem
-gem 'sqlite3', '~> 1.4'
+# gem 'sqlite3', '~> 1.4'
+gem 'pg'
 
 # Required gems
 gem 'activerecord', '~> 7.1'

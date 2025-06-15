@@ -3,7 +3,7 @@ FROM ruby:3.2.2-slim
 WORKDIR /app
 
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git cron nano
+    apt-get install --no-install-recommends -y build-essential libpq-dev pkg-config git cron nano
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
