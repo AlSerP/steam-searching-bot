@@ -3,7 +3,7 @@ require 'date'
 require_relative '../config/config'
 
 namespace :reports do
-  token = File.read(Bot::Config::TOKEN_PATH)
+  token = File.read(Bot::Config::TOKEN_PATH).strip
   $bot = Telegram::Bot::Client.new(token)
   logger = Logger.new(Bot::Config::TASKS_LOGS)
 
