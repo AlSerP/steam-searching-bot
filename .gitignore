@@ -2,3 +2,5 @@ config/token
 db/*
 *.sqlite3
 logs/*.log
+.env
+.idea
