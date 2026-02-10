@@ -9,7 +9,6 @@ class Inventory < ActiveRecord::Base
       next unless new_item[:marketable]
       $bot.logger.debug "Add item #{ new_item[:hash_name] } to inventory of #{ user.tg_id }"
       item = Item.find_or_create_by(hash_name: new_item[:hash_name])
-      $bot.logger.debug "#{ InventoryItem.column_names }"
       InventoryItem.find_or_create_by(item: item, inventory: self)
     end
   end
@@ -37,14 +36,15 @@ class Inventory < ActiveRecord::Base
   end
 
   def update
-    # return if updated_at > DateTime.now - 1.hours
+    return if updated_at > DateTime.now - 1.hours
 
     $bot.logger.info("Start updating inventory of #{ user.tg_id }")
 
     bm = Benchmark.measure {
-      inventory_items.includes(:item).first(10).each do |item|
-        $bot.logger.debug("Get price of #{ item.item.hash_name } - #{ item.item.price }")
-        item.update_price! 
+      inventory_items.includes(:item).each do |item|
+        $bot.logger.debug("Get price of #{ item.item.hash_name }")
+        item.update_price!
+        sleep(1)
       end
     }
 

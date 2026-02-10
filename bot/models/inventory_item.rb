@@ -7,10 +7,10 @@ class InventoryItem < ActiveRecord::Base
   UPDATE_DELAY = 0
 
   def update_price!
-    return unless !item.updated_at.nil? && item.updated_at > DateTime.now - UPDATE_DELAY
+    return if item.updated_at.present? && item.updated_at > DateTime.now - UPDATE_DELAY
 
     old_price = item.current_price
     item.update_price! 
-    update_attribute(:last_price, old_price)
+    update(last_price: old_price)
   end
 end
