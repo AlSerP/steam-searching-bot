@@ -40,6 +40,8 @@ module Bot
     rescue Telegram::Bot::Exceptions::ResponseError => e
       $bot.logger.error "Got error #{e.message}"
       sleep(Bot::Config::ERROR_TIMEOUT)
+    rescue StandardError => e
+      $bot.logger.error "Error: #{e.message}. Backtrace: #{e.backtrace}"
     end
   end
 end

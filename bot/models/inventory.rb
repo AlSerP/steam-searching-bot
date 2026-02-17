@@ -2,6 +2,7 @@ class Inventory < ActiveRecord::Base
   has_many :inventory_items
   belongs_to :user
 
+  UPDATE_TIMEOUT_HOURS = 12
   # scope :items, -> { Item.where(id: inventory_items.pluck(:item)) }
 
   def fill(new_items)
@@ -38,8 +39,8 @@ class Inventory < ActiveRecord::Base
     res
   end
 
-  def update
-    return if updated_at > DateTime.now - 1.hours
+  def update_items
+    return if updated_at > DateTime.now - UPDATE_TIMEOUT_HOURS.hours
 
     $bot.logger.info("Start updating inventory of #{ user.tg_id }")
 
