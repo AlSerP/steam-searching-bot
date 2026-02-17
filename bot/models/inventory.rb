@@ -41,7 +41,7 @@ class Inventory < ActiveRecord::Base
 
     items.sort_by! { |item| -item[3] }
     report = {
-      size: report.count,
+      size: items.count,
       items: items[0..3] + items[-4..-1],
     }
 
