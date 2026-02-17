@@ -28,3 +28,7 @@ end
 every :day, at: '6:00pm' do
   custom_rake 'reports:send'
 end
+
+every :day, at: '0:00am' do
+  custom_rake "inventory:update"
+end

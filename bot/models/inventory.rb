@@ -21,8 +21,6 @@ class Inventory < ActiveRecord::Base
   end
 
   def report
-    # return items_data
-
     ii = items_data
     $bot.logger.info("Inventory of #{user.tg_id} count #{ ii.count } items")
     ii.reject! {|item| item[1].nil? }
@@ -50,7 +48,7 @@ class Inventory < ActiveRecord::Base
     report
   end
 
-  def update_items
+  def update_items!
     return if updated_at > DateTime.now - UPDATE_TIMEOUT_HOURS.hours
 
     $bot.logger.info("Start updating inventory of #{ user.tg_id }")

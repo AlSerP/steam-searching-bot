@@ -31,7 +31,6 @@ module Bot
       private
 
       def perform_send_inventory
-        @user.inventory.update_items
         send_inventory(@user.inventory.report)
       end
 
