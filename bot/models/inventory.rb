@@ -29,9 +29,9 @@ class Inventory < ActiveRecord::Base
 
     items = ii.map do |item|
       price_diff = if item[2].nil?
-                     item[1] - item[2]
-                   else
                      0
+                   else
+                     item[1] - item[2]
                    end
 
       item << price_diff
