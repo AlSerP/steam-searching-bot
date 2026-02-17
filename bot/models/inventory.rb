@@ -14,9 +14,11 @@ class Inventory < ActiveRecord::Base
   end
 
   def report
+    return inventory_items.pluck(:hash_name, :last_price)
+
     ii = inventory_items.report_view
     $bot.logger.info("Inventory of #{user.tg_id} count #{ ii.count } items")
-    ii.reject! {|item| item[1].nil? || item[2].nil? }
+    ii.reject! {|item| item[1].nil? }
 
     rep = ii.map do |item|
       item << item[1] - item[2]
@@ -32,7 +34,8 @@ class Inventory < ActiveRecord::Base
     res.count
 
     $bot.logger.info("Inventory of #{user.tg_id} count #{ res.count } tradable items")
-    return res
+
+    res
   end
 
   def update
