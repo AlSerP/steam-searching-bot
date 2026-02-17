@@ -3,13 +3,13 @@ class Inventory < ActiveRecord::Base
   belongs_to :user
 
   UPDATE_TIMEOUT_HOURS = 12
-  scope :items_data, -> {
-    includes(inventory_items: :item).pluck(
-      'items.hash_name',
-      'items.current_price',
-      'inventory_items.last_price'
-    )
-  }
+  # scope :items_data, -> {
+  #   includes(inventory_items: :item).pluck(
+  #     'items.hash_name',
+  #     'items.current_price',
+  #     'inventory_items.last_price'
+  #   )
+  # }
 
   def fill(new_items)
     new_items.each do |new_item|
@@ -66,5 +66,13 @@ class Inventory < ActiveRecord::Base
 
   def items
     Item.where(id: inventory_items.pluck(:item_id))
+  end
+
+  def items_data
+    inventory_items.includes(:item).pluck(
+      'items.hash_name',
+      'items.current_price',
+      'inventory_items.last_price'
+    )
   end
 end
