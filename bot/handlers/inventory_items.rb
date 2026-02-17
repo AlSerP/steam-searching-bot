@@ -69,11 +69,11 @@ module Bot
         Bot::Messages::AddSteamIdError.send(chat_id: @user.tg_id, username: @username)
       end
 
-      def send_inventory(items)
+      def send_inventory(report)
         Bot::Messages::Inventory.send(
           chat_id: @user.tg_id,
           username: @username,
-          items: items
+          report: report
         )
       end
     end

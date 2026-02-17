@@ -41,7 +41,7 @@ module Bot
       $bot.logger.error "Got error #{e.message}"
       sleep(Bot::Config::ERROR_TIMEOUT)
     rescue StandardError => e
-      $bot.logger.error "Error: #{e.message}. Backtrace: #{e.backtrace}"
+      $bot.logger.error "Error: #{e.message}. Backtrace: #{e.backtrace.join("\n")}"
     end
   end
 end

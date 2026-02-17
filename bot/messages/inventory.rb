@@ -3,12 +3,11 @@ module Bot
     class Inventory < Base
       class << self
         def text(args)
-          res = "Сейчас отслеживается #{args[:items].count} уникальных предмета в вашем инвентаре.\n\n"
+          res = "Сейчас отслеживается #{args[:report][:size]} уникальных предмета в вашем инвентаре.\n\n"
           res << "Важнейшие изменения за последнее время:\n"
-          args[:items].first(5).each do |item|
+          args[:report][:items].each do |item|
             res << "#{item[0]}\n"
-            # res << "Цена: #{item[1]} руб. (#{price_diff_view(item[3])})\n\n"
-            res << "Цена: #{item[1]} руб.\n\n"
+            res << "Цена: #{item[1]} руб. (#{price_diff_view(item[3])})\n\n"
           end
 
           res

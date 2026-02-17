@@ -3,7 +3,13 @@ class Inventory < ActiveRecord::Base
   belongs_to :user
 
   UPDATE_TIMEOUT_HOURS = 12
-  # scope :items, -> { Item.where(id: inventory_items.pluck(:item)) }
+  scope :items_data, -> {
+    includes(inventory_items: :item).pluck(
+      'items.hash_name',
+      'items.current_price',
+      'inventory_items.last_price'
+    )
+  }
 
   def fill(new_items)
     new_items.each do |new_item|
@@ -15,28 +21,28 @@ class Inventory < ActiveRecord::Base
   end
 
   def report
-    return inventory_items.pluck(:hash_name, :last_price)
+    # return items_data
 
-    ii = inventory_items.report_view
+    ii = items_data
     $bot.logger.info("Inventory of #{user.tg_id} count #{ ii.count } items")
     ii.reject! {|item| item[1].nil? }
 
-    rep = ii.map do |item|
-      item << item[1] - item[2]
+    items = ii.map do |item|
+      price_diff = item[1] - item[2]
+      item << price_diff
     end
 
-    $bot.logger.info("Inventory of #{user.tg_id} count #{ rep.count } tradable items")
+    $bot.logger.info("Inventory of #{user.tg_id} count #{ items.count } tradable items")
 
-    rep.sort_by! { |item| -item[3] }
-    res = []
-    res += rep[0..3]
-    res += rep[-4..-1]
+    items.sort_by! { |item| -item[3] }
+    report = {
+      size: report.count,
+      items: items[0..3] + items[-4..-1],
+    }
 
-    res.count
+    $bot.logger.info("Inventory of #{user.tg_id} count #{ report.count } tradable items")
 
-    $bot.logger.info("Inventory of #{user.tg_id} count #{ res.count } tradable items")
-
-    res
+    report
   end
 
   def update_items

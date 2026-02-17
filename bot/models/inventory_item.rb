@@ -2,8 +2,6 @@ class InventoryItem < ActiveRecord::Base
   belongs_to :inventory
   belongs_to :item
 
-  # scope :report_view, -> { joins(:item).pluck(:hash_name, :last_price) }
-
   UPDATE_DELAY = 0
 
   def update_price!
